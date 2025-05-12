@@ -33,7 +33,7 @@ export const FlightCard: React.FC<FlightCardProps> = ({
   isFavorite,
 }) => {
   return (
-    <Card sx={{ minWidth: 300 }}>
+    <Card sx={{ minWidth: 250 }}>
       <Link to={`/flights/${id}`}>
         <CardContent>
           <Typography variant="h6" component="div">

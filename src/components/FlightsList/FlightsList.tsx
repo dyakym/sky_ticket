@@ -101,7 +101,7 @@ export const FlightsList = () => {
 
   return (
     <div className="flex flex-col mx-auto xl:max-w-[1600px] pb-4 md:pb-9">
-      <div className="flex justify-center mt-3 mb-5">
+      <div className="flex flex-col lg:flex-row justify-center gap-3 lg:gap-5 mt-3 mb-5 mx-auto max-w-[300px] lg:max-w-none">
         <Button
           color="inherit"
           onClick={() => setShowFavorites(!showFavorites)}

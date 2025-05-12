@@ -2,7 +2,13 @@ import { useEffect, useMemo, useState } from "react";
 import { getFlightById } from "../../services/flightServices";
 import { Link, useParams } from "react-router-dom";
 import type { Flights } from "../../types/Flights";
-import { Button, CircularProgress } from "@mui/material";
+import {
+  Button,
+  Card,
+  CardContent,
+  CircularProgress,
+  Typography,
+} from "@mui/material";
 import Header from "../Header/Header";
 import { SeatGrid } from "../SeatGrid/SeatGrid";
 import { useSelector } from "react-redux";
@@ -68,7 +74,7 @@ export const FlightDetailsPage = () => {
               </div>
             ) : (
               <>
-                <div className="p-6 my-4 text-white flex justify-between border border-gray-300 rounded-lg">
+                <div className="hidden md:flex justify-between border border-gray-300 rounded-lg p-6 my-8 text-white">
                   <div className="space-y-4">
                     <h4 className="text-2xl"> Рейс:</h4>
                     <p> {id}</p>
@@ -81,14 +87,11 @@ export const FlightDetailsPage = () => {
                     </p>
 
                     <p>
-                      Час відправлення:{" "}
-                      {flight &&
-                        new Date(flight.departureTime).toLocaleString()}
+                      Час відправлення: {flight && new Date(flight.departureTime).toLocaleString()}
                     </p>
 
                     <p>
-                      Час прибуття:{" "}
-                      {flight && new Date(flight.arrivalTime).toLocaleString()}
+                      Час прибуття: {flight && new Date(flight.arrivalTime).toLocaleString()}
                     </p>
                   </div>
 
@@ -97,6 +100,50 @@ export const FlightDetailsPage = () => {
                     <p>Ворота: {flight?.gate}</p>
                   </div>
                 </div>
+               
+                  <div className="flex justify-center my-5 md:hidden">
+                    <Card sx={{ minWidth: 300 }}>
+                      <CardContent>
+                        <Typography variant="h6" component="div">
+                          Рейс: {id}
+                        </Typography>
+
+                        <Typography variant="subtitle1" color="text.secondary">
+                          Авіакомпанія: {flight?.airline}
+                        </Typography>
+
+                        <Typography variant="body2">
+                          Напрямок: {flight?.from} → {flight?.to}
+                        </Typography>
+
+                        <Typography variant="body2">
+                          Час відправлення: {flight && new Date(flight.departureTime).toLocaleString()}
+                        </Typography>
+
+                        <Typography variant="body2">
+                          Час прибуття: {flight && new Date(flight.arrivalTime).toLocaleString()}
+                        </Typography>
+
+                        <Typography variant="body2">
+                          Ціна: {flight?.price}$
+                        </Typography>
+
+                        <Typography variant="body2">
+                          Термінал: {flight?.terminal}
+                        </Typography>
+
+                        <Typography variant="body2">
+                          Ворота: {flight?.gate}
+                        </Typography>
+
+                        <Typography variant="body2">
+                          Кількість квитків: {flight?.tickets.remaining}/
+                          {flight?.tickets.total}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </div>
+               
 
                 {flight && (
                   <>
@@ -108,12 +155,12 @@ export const FlightDetailsPage = () => {
                       />
                     </div>
 
-                    <div className="flex flex-col items-center text-white pb-4 text-xl">
+                    <div className="flex flex-col items-center text-white gap-5 pb-4 md:pb-12 md:text-xl">
                       <p>Ціна одного квитка: {flight.price}$</p>
 
-                      <div className="flex gap-10">
+                      <div className="flex gap-5 xl:gap-10">
                         <p>Додано квитків: {ticketCount}</p>
-                        <p>До оплати: ${totalPrice}</p>
+                        <p>До оплати: {totalPrice}$</p>
                       </div>
 
                       <Button
@@ -121,7 +168,7 @@ export const FlightDetailsPage = () => {
                         to="/cart"
                         variant="contained"
                         color="primary"
-                        sx={{ mt: 2, fontSize: '18px' }}
+                        sx={{ mt: 2, fontSize: "18px" }}
                       >
                         Перейти до кошика
                       </Button>

@@ -101,7 +101,7 @@ export const SeatGrid: React.FC<SeatGridProps> = ({
   };
 
   return (
-    <div className="inline-block p-2.5 border border-gray-300 rounded-lg mb-4">
+    <div className="inline-block p-2.5 border border-gray-300 rounded-lg mb-4 md:mb-8">
       {seats.map((row, rowIndex) => (
         <div key={`row-${rowIndex}`} className="flex mb-2">
           {row.map((seat, seatIndex) => {
@@ -109,7 +109,7 @@ export const SeatGrid: React.FC<SeatGridProps> = ({
               (ticket) => ticket.flight.id === flight.id && ticket.seatId === seat.id
             );
 
-            let seatClasses = "w-8 h-8 rounded flex items-center justify-center font-bold select-none ";
+            let seatClasses = "w-8 h-8 md:w-14 md:h-14 rounded flex items-center justify-center font-bold select-none ";
             if (seat.occupied) {
               seatClasses += "bg-red-600 cursor-not-allowed ";
             } else if (isSelected) {
@@ -117,7 +117,7 @@ export const SeatGrid: React.FC<SeatGridProps> = ({
             } else {
               seatClasses += "bg-green-500 cursor-pointer ";
             }
-            seatClasses += seatIndex === 2 ? "mr-8" : "mr-2";
+            seatClasses += seatIndex === 2 ? "mr-6 md:mr-12" : "mr-2";
 
             return (
               <div
