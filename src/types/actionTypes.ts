@@ -1,0 +1,8 @@
+// actionTypes.ts
+export const ADD_FAVORITE = 'ADD_FAVORITE';
+export const REMOVE_FAVORITE = 'REMOVE_FAVORITE';
+export const TOGGLE_FAVORITE = 'TOGGLE_FAVORITE';
+
+export const ADD_PURCHASED = 'ADD_PURCHASED';
+export const REMOVE_PURCHASED = 'REMOVE_PURCHASED';
+export const CLEAR_PURCHASED = "CLEAR_PURCHASED";

@@ -1,62 +1,70 @@
 import {
   ADD_PURCHASED,
   REMOVE_PURCHASED,
+  CLEAR_PURCHASED,
 } from "../types/actionTypes";
-
-interface PurchasedTicket {
-  flightId: string;
-  seatId: string;
-}
+import type { PurchasedTicket } from "../types/PurchasedTicket";
 
 interface PurchasedState {
   items: PurchasedTicket[];
 }
 
-const loadPurchased = (): PurchasedTicket[] => {
+const loadFromLocalStorage = (): PurchasedTicket[] => {
   try {
-    const serialized = localStorage.getItem("purchased");
-    if (!serialized) return [];
-    return JSON.parse(serialized);
+    const data = localStorage.getItem("purchasedSeats");
+    if (!data) return [];
+    return JSON.parse(data);
   } catch {
     return [];
   }
 };
 
-const savePurchased = (items: PurchasedTicket[]) => {
+const saveToLocalStorage = (items: PurchasedTicket[]) => {
   try {
-    localStorage.setItem("purchased", JSON.stringify(items));
-  } catch {}
+    localStorage.setItem("purchasedSeats", JSON.stringify(items));
+  } catch {
+    // Ignore localStorage write errors
+  }
 };
 
 const initialState: PurchasedState = {
-  items: loadPurchased(),
+  items: loadFromLocalStorage(),
 };
-
-type PurchasedAction =
-  | { type: typeof ADD_PURCHASED; payload: PurchasedTicket }
-  | { type: typeof REMOVE_PURCHASED; payload: PurchasedTicket };
-
-const isSameTicket = (a: PurchasedTicket, b: PurchasedTicket) =>
-  a.flightId === b.flightId && a.seatId === b.seatId;
 
 export const purchasedReducer = (
   state = initialState,
-  action: PurchasedAction
+  action: any
 ): PurchasedState => {
   switch (action.type) {
-    case ADD_PURCHASED:
-      if (state.items.some((item) => isSameTicket(item, action.payload)))
-        return state;
-      const added = [...state.items, action.payload];
-      savePurchased(added);
-      return { items: added };
-
-    case REMOVE_PURCHASED:
-      const removed = state.items.filter(
-        (item) => !isSameTicket(item, action.payload)
+    case ADD_PURCHASED: {
+      const updatedItems = [...state.items, action.payload];
+      saveToLocalStorage(updatedItems);
+      return {
+        ...state,
+        items: updatedItems,
+      };
+    }
+    case REMOVE_PURCHASED: {
+      const updatedItems = state.items.filter(
+        (item) =>
+          !(
+            item.flight.id === action.payload.flightId &&
+            item.seatId === action.payload.seatId
+          )
       );
-      savePurchased(removed);
-      return { items: removed };
+      saveToLocalStorage(updatedItems);
+      return {
+        ...state,
+        items: updatedItems,
+      };
+    }
+    case CLEAR_PURCHASED: {
+      saveToLocalStorage([]);
+      return {
+        ...state,
+        items: [],
+      };
+    }
     default:
       return state;
   }

@@ -1,11 +1,13 @@
+// favoritesReducer.ts
 import {
   ADD_FAVORITE,
   REMOVE_FAVORITE,
-} from "../types/actionTypes";
+  TOGGLE_FAVORITE
+} from '../types/actionTypes';
 
 const loadFavorites = (): string[] => {
   try {
-    const serialized = localStorage.getItem("favorites");
+    const serialized = localStorage.getItem('favorites');
     if (!serialized) return [];
     return JSON.parse(serialized);
   } catch {
@@ -15,7 +17,7 @@ const loadFavorites = (): string[] => {
 
 const saveFavorites = (items: string[]) => {
   try {
-    localStorage.setItem("favorites", JSON.stringify(items));
+    localStorage.setItem('favorites', JSON.stringify(items));
   } catch {}
 };
 
@@ -28,8 +30,9 @@ const initialState: FavoritesState = {
 };
 
 type FavoritesAction =
-  | { type: typeof ADD_FAVORITE; payload: string }
-  | { type: typeof REMOVE_FAVORITE; payload: string };
+  | { type: typeof ADD_FAVORITE, payload: string }
+  | { type: typeof REMOVE_FAVORITE, payload: string }
+  | { type: typeof TOGGLE_FAVORITE, payload: string };
 
 export const favoritesReducer = (
   state = initialState,
@@ -42,9 +45,19 @@ export const favoritesReducer = (
       saveFavorites(added);
       return { items: added };
     case REMOVE_FAVORITE:
-      const removed = state.items.filter((id) => id !== action.payload);
+      const removed = state.items.filter(id => id !== action.payload);
       saveFavorites(removed);
       return { items: removed };
+    case TOGGLE_FAVORITE:
+      if (state.items.includes(action.payload)) {
+        const toggledOff = state.items.filter(id => id !== action.payload);
+        saveFavorites(toggledOff);
+        return { items: toggledOff };
+      } else {
+        const toggledOn = [...state.items, action.payload];
+        saveFavorites(toggledOn);
+        return { items: toggledOn };
+      }
     default:
       return state;
   }
